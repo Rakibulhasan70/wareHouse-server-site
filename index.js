@@ -15,6 +15,7 @@ app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.faflb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 console.log('connected');
 
@@ -23,7 +24,7 @@ async function run() {
         await client.connect()
         const productCollection = client.db('WearHouse').collection('product')
 
-        // get all data 
+        // get all product 
         app.get('/product', async (req, res) => {
             const query = {}
             const cursor = productCollection.find(query)
@@ -31,13 +32,30 @@ async function run() {
             res.send(result)
         });
 
-        // get single data
+        // get single product
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await productCollection.findOne(query);
             res.send(result)
+        });
+
+        // add products 
+
+        app.post('/product', async (req, res) => {
+            const newProduct = req.body
+            const result = await productCollection.insertOne(newProduct)
+            res.send(result)
         })
+
+        // delete single product
+
+        // app.delete('/product/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) }
+        //     const result = await productCollection.deleteOne(query)
+        //     res.send(result)
+        // })
 
     }
     finally {
