@@ -11,8 +11,6 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 app.use(cors());
 app.use(express.json());
 
-// wearhouseManage
-// jqY7tWDivZB0Sqx1
 
 
 
