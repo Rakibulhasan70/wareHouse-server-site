@@ -6,6 +6,7 @@ require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
+
 // middlewear
 
 app.use(cors());
@@ -76,7 +77,26 @@ async function run() {
             };
             const result = await productCollection.updateOne(filter, updateDoc, option)
             res.send(result);
-        })
+        });
+
+
+        // /////////////////////////
+
+
+        // app.post('/added', async (req, res) => {
+        //     const newProduct = req.body
+        //     const result = await productCollection.insertOne(newProduct)
+        //     res.send(result)
+        // })
+
+
+        // app.get('/added', async (req, res) => {
+        //     // const email = req.query.email
+        //     const query = {}
+        //     const cursor = myCollection.find(query)
+        //     const result = await cursor.toArray()
+        //     res.send(result)
+        // });
 
     }
     finally {
