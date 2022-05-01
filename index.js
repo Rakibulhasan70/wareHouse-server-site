@@ -78,25 +78,22 @@ async function run() {
             const result = await productCollection.updateOne(filter, updateDoc, option)
             res.send(result);
         });
+        /////////////////// my items //////////////////////
+        app.post('/addItem', async (req, res) => {
+            const newService = req.body;
+            const result = await productCollection.insertOne(newService);
+            res.send(result);
+        });
 
+        app.get("/myItem/:email", async (req, res) => {
+            const email = req.params;
+            // console.log(email);
+            // const query={email};
+            const cursor = productCollection.find(email)
+            const products = await cursor.toArray()
+            res.send(products)
+        })
 
-        // /////////////////////////
-
-
-        // app.post('/added', async (req, res) => {
-        //     const newProduct = req.body
-        //     const result = await productCollection.insertOne(newProduct)
-        //     res.send(result)
-        // })
-
-
-        // app.get('/added', async (req, res) => {
-        //     // const email = req.query.email
-        //     const query = {}
-        //     const cursor = myCollection.find(query)
-        //     const result = await cursor.toArray()
-        //     res.send(result)
-        // });
 
     }
     finally {
