@@ -23,19 +23,15 @@ function verifyJWT(req, res, next) {
         if (err) {
             return res.status(403).send({ message: 'Forbidden access' })
         }
-        console.log('decoded', decoded);
         req.decoded = decoded;
         next();
     })
-    console.log('inside veryfyJWT', authHeader);
 
 }
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.faflb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-console.log('connected');
 
 async function run() {
     try {
@@ -110,18 +106,25 @@ async function run() {
             res.send(result);
         });
         /////////////////// my items //////////////////////
+
         app.post('/addItem', async (req, res) => {
             const newService = req.body;
             const result = await productCollection.insertOne(newService);
             res.send(result);
         });
 
+        // delete item
+
+        app.delete('/myItem/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await productCollection.deleteOne(query)
+            res.send(result)
+        })
+
         app.get("/myItem/:email", verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email
             const email = req.params;
-            console.log('email', email);
-            // console.log(email);
-            // const query={email};
             if (email !== decodedEmail) {
 
                 const cursor = productCollection.find(email)
