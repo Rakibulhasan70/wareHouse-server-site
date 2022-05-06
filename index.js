@@ -3,7 +3,6 @@ const app = express()
 const port = process.env.PORT || 5000;
 const cors = require('cors')
 require('dotenv').config()
-// const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
@@ -13,21 +12,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 app.use(cors());
 app.use(express.json());
 
-// function verifyJWT(req, res, next) {
-//     const authHeader = req.headers.authorization;
-//     if (!authHeader) {
-//         return res.status(401).send({ message: 'unauhoraized access' })
-//     }
-//     const token = authHeader.split(' ')[1]
-//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-//         if (err) {
-//             return res.status(403).send({ message: 'Forbidden access' })
-//         }
-//         req.decoded = decoded;
-//         next();
-//     })
 
-// }
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.faflb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -37,20 +22,6 @@ async function run() {
     try {
         await client.connect()
         const productCollection = client.db('WearHouse').collection('product')
-
-        // token generator
-
-        // app.post('/login', (req, res) => {
-        //     const user = req.body;
-        //     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        //         expiresIn: '60d'
-        //     })
-        //     res.send({ accessToken })
-        // })
-
-
-
-
 
         // get all product 
         app.get('/product', async (req, res) => {
@@ -123,17 +94,10 @@ async function run() {
         })
 
         app.get("/myItem/:email", async (req, res) => {
-            // const decodedEmail = req.decoded.email
             const email = req.params;
-            // if (email !== decodedEmail) {
-
             const cursor = productCollection.find(email)
             const products = await cursor.toArray()
             res.send(products)
-            // }
-            // else {
-            //   (403  res.status).send({ message: 'forbidden access' })
-            // }
         })
 
 
